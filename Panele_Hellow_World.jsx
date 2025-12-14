@@ -17,7 +17,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してHelloWorld2を呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2025/12/14
+// Ver.1.0 : 2025/12/14a
 
 
 #target illustrator
@@ -95,3 +95,4 @@ function main()
         alert(msg) ; 
      }
 }
+

@@ -17,7 +17,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してHelloWorld2を呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2025/12/14a
+// Ver.1.0 : 2025/12/20
 
 
 #target illustrator
@@ -37,48 +37,48 @@ $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 // クラス CHellowWorldDlg
 //-----------------------------------
 
-    // コンストラクタ (ここから) 
-    function CHellowWorldDlg( DlgName, InstanceName ) { 
+// コンストラクタ (ここから) 
+function CHellowWorldDlg( DlgName, InstanceName ) { 
        
-        // 初期化
-        const TheMainObj = this;
-        CPaletteWindow.call( TheMainObj );          // コンストラクタ
-        TheMainObj.InitDialog( DlgName );           // イニシャライザ
-        const TheMainDlg = TheMainObj.GetDlg();     // ダイアログへのオブジェクトを得る
+    // 初期化
+    const TheObj = this;
+    CPaletteWindow.call( TheObj );          // コンストラクタ
+    TheObj.InitDialog( DlgName );           // イニシャライザ
+    TheObj.InitInstance( InstanceName );    // インスタンス初期化
+    const TheDialog = TheObj.GetDlg();      // ダイアログへのオブジェクトを得る
 
-        // ダイアログにボタン追加
-        myButton = TheMainObj.AddButton("Push");
-        myButton.onClick = function() {
-            try {
-                TheMainObj.CallFunc( InstanceName, "HelloWorld2" );
-            }
-            catch(e) {
-                alert( e.message );
-            } 
+    // ダイアログにボタン追加
+    myButton = TheObj.AddButton("Push");
+    myButton.onClick = function() {
+        try {
+            TheObj.CallFunc( "HelloWorld2" );
         }
+        catch(e) {
+            alert( e.message );
+        }
+    }
 
-    } // コンストラクタ (ここまで) 
+} // コンストラクタ (ここまで) 
+
+
+CHellowWorldDlg.prototype = CPaletteWindow.prototype;   // サブクラスのメソッド追加よりも先に、継承させること
+
+
+// 追加したいソッドをここで定義
+CHellowWorldDlg.prototype.HelloWorld = function() {
+    alert("Hellow world");
+}
     
-    // ・サブクラスのメソッド追加よりも先に、プロトタイプチェーンで継承させること。
-    // ・追加したメソッドが継承元のメソッド名と同じ場合は、上書きになるので注意すること。
-    CHellowWorldDlg.prototype = CPaletteWindow.prototype;
-    
-    // 追加したいソッドをここで定義
-    CHellowWorldDlg.prototype.HelloWorld = function() {
-        alert("Hellow world");
-    }
-    
-    // 追加したいメソッドをここで定義
-    CHellowWorldDlg.prototype.HelloWorld2 = function() {
-        const TheObj = this;
-        TheObj.HelloWorld();
-        TheObj.CloseDlg();
-    }
+// 追加したいメソッドをここで定義
+CHellowWorldDlg.prototype.HelloWorld2 = function() {
+    const TheObj = this;
+    TheObj.HelloWorld();
+    TheObj.CloseDlg();
+}
  
 
 //インスタンスを生成。なお、CHellowWorldDlgの引数にも、インスタンス名(DlgPaint)を記入のこと！！
 var DlgPaint = new CHellowWorldDlg( "test", "DlgPaint" );
-
 
 main();
 
@@ -95,4 +95,3 @@ function main()
         alert(msg) ; 
      }
 }
-

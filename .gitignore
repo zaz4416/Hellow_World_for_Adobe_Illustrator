@@ -436,3 +436,4 @@ FodyWeavers.xsd
 ._.gitignore
 .github/workflows/._hello.yml
 .github/workflows/._release.yml
+._.gitignore

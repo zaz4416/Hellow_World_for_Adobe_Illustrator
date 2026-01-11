@@ -418,3 +418,4 @@ FodyWeavers.xsd
 *.msp
 ._Panele_Hellow_World.jsx
 ._.github
+._.gitignore

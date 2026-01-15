@@ -62,11 +62,11 @@ CGirl.prototype.HayHelloW = function() {
 
 
 //-----------------------------------
-// クラス CHellowWorldDlg
+// クラス CHelloWorldDlg
 //-----------------------------------
 
 // コンストラクタ (ここから) 
-function CHellowWorldDlg( DlgName, InstanceName ) { 
+function CHelloWorldDlg( DlgName, InstanceName ) { 
        
     // 初期化
     const TheObj = this;
@@ -89,16 +89,16 @@ function CHellowWorldDlg( DlgName, InstanceName ) {
 } // コンストラクタ (ここまで) 
 
 
-CHellowWorldDlg.prototype = CPaletteWindow.prototype;   // サブクラスのメソッド追加よりも先に、継承させること
+CHelloWorldDlg.prototype = CPaletteWindow.prototype;   // サブクラスのメソッド追加よりも先に、継承させること
 
 
 // 追加したいソッドをここで定義
-CHellowWorldDlg.prototype.HelloWorld = function( Human ) {
+CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
     Human.HayHelloW();
 }
     
 // 追加したいメソッドをここで定義
-CHellowWorldDlg.prototype.SayHelloWorld = function() {
+CHelloWorldDlg.prototype.SayHelloWorld = function() {
     const TheObj = this;
     TheObj.HelloWorld( new CBoy() );
     TheObj.HelloWorld( new CGirl() );
@@ -106,8 +106,8 @@ CHellowWorldDlg.prototype.SayHelloWorld = function() {
 }
  
 
-//インスタンスを生成。なお、CHellowWorldDlgの引数にも、インスタンス名(DlgPaint)を記入のこと！！
-var DlgPaint = new CHellowWorldDlg( "test", "DlgPaint" );
+//インスタンスを生成。なお、CHelloWorldDlgの引数にも、インスタンス名(DlgPaint)を記入のこと！！
+var DlgPaint = new CHelloWorldDlg( "HelloWorld", "DlgPaint" );
 
 main();
 

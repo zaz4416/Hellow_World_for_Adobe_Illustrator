@@ -14,7 +14,7 @@
  このボタンを押すことで、Hellow Worldと表示して終わります。
 
  ボタンが押されたが押された後の処理はおおまかには、下記のようになっています。
-   ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してHelloWorld2を呼ぶ　→　HelloWorldを呼ぶ
+   ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
 // Ver.1.0 : 2026/01/18

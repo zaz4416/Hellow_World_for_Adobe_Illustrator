@@ -54,18 +54,47 @@ var LangStrings = {
 };
 
 
+// プロパティ・メソッドをコピーする汎用関数
+function ClassInheritance(subClass, superClass) {
+    for (var prop in superClass.prototype) {
+        if (superClass.prototype.hasOwnProperty(prop)) {
+            subClass.prototype[prop] = superClass.prototype[prop];
+        }
+    }
+}
+
+
+//-----------------------------------
+// クラス CHuman
+//-----------------------------------
+
+// コンストラクタ (ここから) 
+function CHuman() { 
+} // コンストラクタ (ここまで) 
+
+// 追加したいメソッドをここで定義
+CHuman.prototype.HayHelloAnyone = function( Anyone ) {
+    //alert($.locale);
+    alert(localize(LangStrings.hello_world) + "\n" + Anyone );
+}
+
+
 //-----------------------------------
 // クラス CBoy
 //-----------------------------------
 
 // コンストラクタ (ここから) 
-function CBoy() { 
+function CBoy() {
+    CHuman.call(this);  // 親のプロパティを継承
 } // コンストラクタ (ここまで) 
 
-// 追加したいメソッドをここで定義
+// CHumanのメソッドをコピー
+ClassInheritance(CBoy, CHuman);
+
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CBoy.prototype.HayHello = function() {
     //alert($.locale);
-    alert(localize(LangStrings.hello_world) + "\n" + localize(LangStrings.boy));
+    this.HayHelloAnyone( localize(LangStrings.boy) );
 }
 
 
@@ -74,12 +103,16 @@ CBoy.prototype.HayHello = function() {
 //-----------------------------------
 
 // コンストラクタ (ここから) 
-function CGirl() { 
+function CGirl() {
+    CHuman.call(this); // 親のプロパティを継承
 } // コンストラクタ (ここまで) 
 
-// 追加したいメソッドをここで定義
+// CHumanのメソッドをコピー
+ClassInheritance(CGirl, CHuman);
+
+// ClassInheritanceの後ろで、追加したいメソッドを定義
 CGirl.prototype.HayHello = function() {
-    alert(localize(LangStrings.hello_world) + "\n" + localize(LangStrings.girl));
+    this.HayHelloAnyone( localize(LangStrings.girl) );
 }
 
 

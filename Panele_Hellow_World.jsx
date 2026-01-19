@@ -17,7 +17,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/01/18
+// Ver.1.0 : 2026/01/19
 
 
 #target illustrator
@@ -142,7 +142,7 @@ function CHelloWorldDlg( DlgName, InstanceName ) {
 
 } // コンストラクタ (ここまで) 
 
-// CHumanのメソッドをコピー
+// メソッドをコピー
 ClassInheritance(CHelloWorldDlg, CPaletteWindow);
 
 // ClassInheritanceの後ろで、追加したいメソッドを定義

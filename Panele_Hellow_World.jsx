@@ -17,7 +17,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/01/19
+// Ver.1.0 : 2026/01/20
 
 
 #target illustrator
@@ -145,7 +145,7 @@ function CHelloWorldDlg( DlgName, InstanceName ) {
     var myButton = this.AddButton( localize(LangStrings.confirm) );
     myButton.onClick = function() {
         try {
-            CHelloWorldDlg.TheObj.CallFunc( "SayHelloWorld" );
+            CHelloWorldDlg.TheObj.CallFunc( "SayHelloWorld" ); // 静的メソッドを呼び出すこと
         }
         catch(e) {
             alert( e.message );
@@ -154,6 +154,13 @@ function CHelloWorldDlg( DlgName, InstanceName ) {
 
 } // コンストラクタ (ここまで) 
 
+// 静的メソッド
+CHelloWorldDlg.SayHelloWorld = function() {
+    CHelloWorldDlg.TheObj.HelloWorld( new CBoy() );
+    CHelloWorldDlg.TheObj.HelloWorld( new CGirl() );
+    CHelloWorldDlg.TheObj.CloseDlg();
+}  
+
 // メソッドをコピー
 ClassInheritance(CHelloWorldDlg, CPaletteWindow);
 
@@ -161,17 +168,10 @@ ClassInheritance(CHelloWorldDlg, CPaletteWindow);
 CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
     Human.HayHello();
 }
-    
-// ClassInheritanceの後ろで、追加したいメソッドを定義
-CHelloWorldDlg.prototype.SayHelloWorld = function() {
-    CHelloWorldDlg.TheObj.HelloWorld( new CBoy() );
-    CHelloWorldDlg.TheObj.HelloWorld( new CGirl() );
-    CHelloWorldDlg.TheObj.CloseDlg();
-}
  
 
 //インスタンスを生成。なお、CHelloWorldDlgの引数にも、インスタンス名(DlgPaint)を記入のこと！！
-var DlgPaint = new CHelloWorldDlg( "HelloWorld", "DlgPaint" );
+var DlgPaint = new CHelloWorldDlg( "HelloWorld", "CHelloWorldDlg" );
 
 main();
 

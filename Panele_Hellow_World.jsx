@@ -135,9 +135,8 @@ CGirl.prototype.HayHello = function() {
 function CHelloWorldDlg( DlgName ) {
       
     // 初期化
-    CPaletteWindow.call( this, false );         // 親のプロパティを継承
-    this.InitDialog( DlgName );                 // イニシャライザ
-    this.InitInstance( CHelloWorldDlg.name );   // インスタンス初期化
+    CPaletteWindow.call( this, false );   // 親のプロパティを継承
+    this.InitDialog( DlgName );           // イニシャライザ
 
     CHelloWorldDlg.TheObj = this;         // クラスインスタンスを指す this を退避( 静的プロパティ )
 

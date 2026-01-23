@@ -153,11 +153,11 @@ CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
  
 
 //インスタンスを生成。
-var DlgPaint = new CHelloWorldDlg( "HelloWorld" );
+var DlgHello = new CHelloWorldDlg( "HelloWorld" );
 
 main();
 
 function main()
 {    
-    DlgPaint.ShowDlg();
+    DlgHello.ShowDlg();
 }

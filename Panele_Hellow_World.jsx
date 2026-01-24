@@ -108,6 +108,7 @@ CGirl.prototype.HayHello = function() {
  //-----------------------------------
 // クラス CSurface
 //-----------------------------------
+
 // 1. コンストラクタ定義
 function CSurface( DlgName ) {
     CPaletteWindow.call( this,false );       // コンストラクタ
@@ -119,12 +120,45 @@ function CSurface( DlgName ) {
     var Dlg = this.m_Dialog;    // ダイアログへのポインタを確保
     var self = this;            // クラスへののポインタを確保
 
-    // GUIを定義
-#include "GUI/GUI_Surface.jsx"
+    // 1. 偽のコンストラクタ（既存のダイアログを返す）
+    var FakeWindow = function() { return self.m_Dialog; };
+    // オリジナルのWindowプロトタイプを継承させておく（instanceof対策）
+    FakeWindow.prototype = _OriginalWindow.prototype;
+
+    // 2. 外部ファイルのコードを文字列として読み込む
+    // ※ $.fileName を使うことで、このJSXファイルからの相対パスを正確に取得
+    var currentPath = new File($.fileName).path;
+    var guiFile = new File(currentPath + "/GUI/GUI_Surface.jsx");
+    
+    var guiCode = "";
+    if (guiFile.open("r")) {
+        guiCode = guiFile.read();
+        guiFile.close();
+    } else {
+        throw new Error("GUI定義ファイルが見つかりません: " + guiFile.fullName);
+    }
+
+    // 3. 即時関数によるスコープの差し替え
+    // 第1引数に FakeWindow を渡すことで、guiCode 内の "new Window" が
+    // グローバルの Window ではなく、FakeWindow（= self.m_Dialog）を参照します
+    (function(Window) {
+        try {
+            eval(guiCode);
+            
+            // 4. GUI_Surface.jsx 内で定義されているはずの変数(button1等)を
+            // クラスのプロパティに紐付け直す（これで他のメソッドから呼べるようになる）
+            if (typeof button1 !== "undefined") {
+                self.button1 = button1;
+            }
+        } catch (e) {
+            alert("GUI実行エラー: " + e.message);
+        }
+    })(FakeWindow);
+
 
     // GUIに変更を入れる
-    button1.text = localize(LangStrings.confirm);
-    button1.onClick = function() { self.onSayHelloWorldClick(); }
+    self.button1.text = localize(LangStrings.confirm);
+    self.button1.onClick = function() { self.onSayHelloWorldClick(); }
 }
 
 // 2. クラス継承

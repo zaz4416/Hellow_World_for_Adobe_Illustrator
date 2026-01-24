@@ -1,4 +1,4 @@
-﻿//var Dlg = new Window("dialog"); 
+﻿var Dlg = new Window("dialog"); 
     Dlg.text = "Dialog"; 
     Dlg.orientation = "column"; 
     Dlg.alignChildren = ["center","top"]; 

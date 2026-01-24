@@ -17,7 +17,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/01/23
+// Ver.1.0 : 2026/01/24
 
 
 #target illustrator
@@ -106,37 +106,43 @@ CGirl.prototype.HayHello = function() {
 }
 
 
+ //-----------------------------------
+// クラス CSurface
+//-----------------------------------
+// 1. コンストラクタ定義
+function CSurface( DlgName ) {
+    CPaletteWindow.call( this,false );       // コンストラクタ
+    this.InitDialog( DlgName );              // イニシャライザ
+
+    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
+    this.constructor.TheObj = this;
+
+    // クラスへのポインタを確保
+    var self = this;
+
+    // ダイアログにボタン追加
+    var myButton = self.AddButton( localize(LangStrings.confirm) );
+    myButton.onClick = function() { self.onSayHelloWorldClick(); }
+}
+
+// 2. クラス継承
+ClassInheritance(CSurface, CPaletteWindow);
+
+
 //-----------------------------------
 // クラス CHelloWorldDlg
 //-----------------------------------
 
 // 1. コンストラクタ定義
 function CHelloWorldDlg( DlgName ) {
-      
-    // 初期化
-    CPaletteWindow.call( this, false );   // 親のプロパティを継承
-    this.InitDialog( DlgName );           // イニシャライザ
 
-    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
-    this.constructor.TheObj = this;
+    CSurface.call( this, DlgName );   // コンストラクタ
 
     var self = this;
-
-    // ダイアログにボタン追加
-    var myButton = this.AddButton( localize(LangStrings.confirm) );
-    myButton.onClick = function() {
-        try {
-            self.CallFunc( "SayHelloWorld" ); // 静的メソッドを呼び出すこと
-        }
-        catch(e) {
-            alert( e.message );
-        }
-    }
-
 }
 
 // 2. クラス継承
-ClassInheritance(CHelloWorldDlg, CPaletteWindow);
+ClassInheritance(CHelloWorldDlg, CSurface);
 
 // 3. 静的メソッドの定義
 CHelloWorldDlg.SayHelloWorld = function() {
@@ -147,6 +153,16 @@ CHelloWorldDlg.SayHelloWorld = function() {
 }  
 
 // 4. プロトタイプメソッドの定義
+CHelloWorldDlg.prototype.onSayHelloWorldClick = function() {
+    try
+    {
+        this.CallFunc( "SayHelloWorld" ); // 静的メソッドを呼び出すこと
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
 CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
     Human.HayHello();
 }

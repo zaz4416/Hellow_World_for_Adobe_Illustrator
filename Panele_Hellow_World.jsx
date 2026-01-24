@@ -149,12 +149,38 @@ function CSurface( DlgName ) {
     (function(Window) {
         try {
             eval(guiCode);
-            
-            // 4. GUI_Surface.jsx 内で定義されているはずの変数(button1等)を
-            // クラスのプロパティに紐付け直す（これで他のメソッドから呼べるようになる）
-            if (typeof button1 !== "undefined") {
-                self.button1 = button1;
+
+            // 1. guiCode から "var 変数名" をすべて抜き出す（正規表現）
+            var varNames = [];
+            var match;
+            // var の後ろにある単語を抽出する正規表現
+            var regex = /var\s+([a-zA-Z0-9_]+)/g;
+            while ((match = regex.exec(guiCode)) !== null) {
+                varNames.push(match[1]);
             }
+
+            // 2. 変数を外に引き出すための「エクスポート用コード」を生成
+            // eval の末尾で実行させ、定義された変数を return させる
+            var exportSnippet = "\n; (function(){ \n var __result = {};";
+            for (var i = 0; i < varNames.length; i++) {
+                var v = varNames[i];
+                // 変数が定義されている場合のみ、戻り値のオブジェクトに格納
+                exportSnippet += "if(typeof " + v + " !== 'undefined') __result['" + v + "'] = " + v + ";\n";
+            }
+            exportSnippet += "return __result; \n })();";
+
+            // 3. 元のコードとエクスポートコードを合体させて eval を実行し、結果を受け取る
+            var extractedVars = eval(guiCode + exportSnippet);
+
+            // 4. 受け取った変数を一括で self (インスタンス) に紐付ける
+            for (var key in extractedVars) {
+                if (extractedVars.hasOwnProperty(key)) {
+                    // button1, group1 などが自動的に self に登録される
+                    self[key] = extractedVars[key];
+                    $.writeln("FakeWindow関数で、selfに追加: " + key); // デバッグ用
+                }
+            }
+
         } catch (e) {
             alert("GUI実行エラー: " + e.message);
         }

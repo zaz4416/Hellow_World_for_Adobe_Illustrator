@@ -4,9 +4,12 @@
 </javascriptresource>
 */
 
-/*-----------------------------------------
+/*----------------------------------------------------------
     CPaletteWindowをつかって、”Hlloe world”
--------------------------------------------*/
+
+    https://scriptui.joonas.me/
+      ↑ Script Bulderで生成されwたスクリプトをそのまま使用できます
+------------------------------------------------------------*/
 
 /*
  CPaletteWindowを基底クラスとして作成しました。
@@ -17,7 +20,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/01/23
+// Ver.1.0 : 2026/01/24
 
 
 #target illustrator
@@ -105,6 +108,98 @@ CGirl.prototype.HayHello = function() {
     this.HayHelloAnyone( localize(LangStrings.girl) );
 }
 
+ //-----------------------------------
+// クラス CSurface
+//-----------------------------------
+
+// 1. コンストラクタ定義
+function CSurface( DlgName ) {
+    CPaletteWindow.call( this,false );       // コンストラクタ
+    this.InitDialog( DlgName );              // イニシャライザ
+
+    var self = this;            // クラスへののポインタを確保
+
+    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
+    self.constructor.TheObj = self;
+
+    // GUI用のスクリプトを読み込む
+    self.DefineGUI( self, "/GUI/GUI_Surface.jsx" );
+
+    // GUIに変更を入れる
+    self.button1.text = localize(LangStrings.confirm);
+    self.button1.onClick = function() { self.onSayHelloWorldClick(); }
+}
+
+// 2. クラス継承
+ClassInheritance(CSurface, CPaletteWindow);
+
+
+var _OriginalWindow = Window; 
+CSurface.prototype.DefineGUI = function( self, GUI_Path ) {
+
+    // 1. 偽のコンストラクタ（既存のダイアログを返す）
+    var FakeWindow = function() {
+        $.writeln( "オーバーライドされたwindowを実行" );
+        return self.m_Dialog;
+    };
+    // オリジナルのWindowプロトタイプを継承させておく（instanceof対策）
+    FakeWindow.prototype = _OriginalWindow.prototype;
+
+    // 2. 外部ファイルのコードを文字列として読み込む
+    // ※ $.fileName を使うことで、このJSXファイルからの相対パスを正確に取得
+    var currentPath = new File($.fileName).path;
+    var guiFile = new File(currentPath + GUI_Path);
+    
+    var guiCode = "";
+    if (guiFile.open("r")) {
+        guiCode = guiFile.read();
+        guiFile.close();
+    } else {
+        throw new Error("GUI定義ファイルが見つかりません: " + guiFile.fullName);
+    }
+
+    // 3. 即時関数によるスコープの差し替え
+    // 第1引数に FakeWindow を渡すことで、guiCode 内の "new Window" が
+    // グローバルの Window ではなく、FakeWindow（= self.m_Dialog）を参照します
+    (function(Window) {
+        try {
+            // 1. guiCode から "var 変数名" をすべて抜き出す（正規表現）
+            var varNames = [];
+            var match;
+            // var の後ろにある単語を抽出する正規表現
+            var regex = /var\s+([a-zA-Z0-9_]+)/g;
+            while ((match = regex.exec(guiCode)) !== null) {
+                varNames.push(match[1]);
+            }
+
+            // 2. 変数を外に引き出すための「エクスポート用コード」を生成
+            // eval の末尾で実行させ、定義された変数を return させる
+            var exportSnippet = "\n; (function(){ \n var __result = {};";
+            for (var i = 0; i < varNames.length; i++) {
+                var v = varNames[i];
+                // 変数が定義されている場合のみ、戻り値のオブジェクトに格納
+                exportSnippet += "if(typeof " + v + " !== 'undefined') __result['" + v + "'] = " + v + ";\n";
+            }
+            exportSnippet += "return __result; \n })();";
+
+            // 3. 元のコードとエクスポートコードを合体させて eval を実行し、結果を受け取る
+            var extractedVars = eval(guiCode + exportSnippet);
+
+            // 4. 受け取った変数を一括で self (インスタンス) に紐付ける
+            for (var key in extractedVars) {
+                if (extractedVars.hasOwnProperty(key)) {
+                    // button1, group1 などが自動的に self に登録される
+                    self[key] = extractedVars[key];
+                    $.writeln("DefineGUI関数で、selfに追加: " + key); // デバッグ用
+                }
+            }
+
+        } catch (e) {
+            alert("GUI実行エラー: " + e.message);
+        }
+    })(FakeWindow);
+}
+
 
 //-----------------------------------
 // クラス CHelloWorldDlg
@@ -112,31 +207,14 @@ CGirl.prototype.HayHello = function() {
 
 // 1. コンストラクタ定義
 function CHelloWorldDlg( DlgName ) {
-      
-    // 初期化
-    CPaletteWindow.call( this, false );   // 親のプロパティを継承
-    this.InitDialog( DlgName );           // イニシャライザ
 
-    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
-    this.constructor.TheObj = this;
+    CSurface.call( this, DlgName );   // コンストラクタ
 
     var self = this;
-
-    // ダイアログにボタン追加
-    var myButton = this.AddButton( localize(LangStrings.confirm) );
-    myButton.onClick = function() {
-        try {
-            self.CallFunc( "SayHelloWorld" ); // 静的メソッドを呼び出すこと
-        }
-        catch(e) {
-            alert( e.message );
-        }
-    }
-
 }
 
 // 2. クラス継承
-ClassInheritance(CHelloWorldDlg, CPaletteWindow);
+ClassInheritance(CHelloWorldDlg, CSurface);
 
 // 3. 静的メソッドの定義
 CHelloWorldDlg.SayHelloWorld = function() {
@@ -147,6 +225,16 @@ CHelloWorldDlg.SayHelloWorld = function() {
 }  
 
 // 4. プロトタイプメソッドの定義
+CHelloWorldDlg.prototype.onSayHelloWorldClick = function() {
+    try
+    {
+        this.CallFunc( "SayHelloWorld" ); // 静的メソッドを呼び出すこと
+    }
+    catch(e)
+    {
+        alert( e.message );
+    }
+}
 CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
     Human.HayHello();
 }

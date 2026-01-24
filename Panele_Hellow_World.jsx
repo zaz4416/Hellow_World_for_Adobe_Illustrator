@@ -105,10 +105,6 @@ CGirl.prototype.HayHello = function() {
     this.HayHelloAnyone( localize(LangStrings.girl) );
 }
 
-
-
-
-
  //-----------------------------------
 // クラス CSurface
 //-----------------------------------
@@ -123,18 +119,8 @@ function CSurface( DlgName ) {
     var Dlg = this.m_Dialog;    // ダイアログへのポインタを確保
     var self = this;            // クラスへののポインタを確保
 
-
     // GUIを定義
-//var Dlg = new Window("dialog"); 
-    Dlg.text = "Dialog"; 
-    Dlg.orientation = "column"; 
-    Dlg.alignChildren = ["center","top"]; 
-    Dlg.spacing = 10; 
-    Dlg.margins = 16; 
-
-var button1 = Dlg.add("button", undefined, undefined, {name: "button1"}); 
-    button1.text = "Push this button"; 
-
+#include "GUI/GUI_Surface.jsx"
 
     // GUIに変更を入れる
     button1.text = localize(LangStrings.confirm);

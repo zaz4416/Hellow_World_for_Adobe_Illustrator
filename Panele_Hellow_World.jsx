@@ -109,18 +109,30 @@ CGirl.prototype.HayHello = function() {
 // クラス CSurface
 //-----------------------------------
 
-var _OriginalWindow = Window; 
-
 // 1. コンストラクタ定義
 function CSurface( DlgName ) {
     CPaletteWindow.call( this,false );       // コンストラクタ
     this.InitDialog( DlgName );              // イニシャライザ
 
-    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
-    this.constructor.TheObj = this;
-
-    var Dlg = this.m_Dialog;    // ダイアログへのポインタを確保
     var self = this;            // クラスへののポインタを確保
+
+    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
+    self.constructor.TheObj = self;
+
+    // GUI用のスクリプトを読み込む
+    self.DefineGUI( self, "/GUI/GUI_Surface.jsx" );
+
+    // GUIに変更を入れる
+    self.button1.text = localize(LangStrings.confirm);
+    self.button1.onClick = function() { self.onSayHelloWorldClick(); }
+}
+
+// 2. クラス継承
+ClassInheritance(CSurface, CPaletteWindow);
+
+
+var _OriginalWindow = Window; 
+CSurface.prototype.DefineGUI = function( self, GUI_Path ) {
 
     // 1. 偽のコンストラクタ（既存のダイアログを返す）
     var FakeWindow = function() {
@@ -133,7 +145,7 @@ function CSurface( DlgName ) {
     // 2. 外部ファイルのコードを文字列として読み込む
     // ※ $.fileName を使うことで、このJSXファイルからの相対パスを正確に取得
     var currentPath = new File($.fileName).path;
-    var guiFile = new File(currentPath + "/GUI/GUI_Surface.jsx");
+    var guiFile = new File(currentPath + GUI_Path);
     
     var guiCode = "";
     if (guiFile.open("r")) {
@@ -175,7 +187,7 @@ function CSurface( DlgName ) {
                 if (extractedVars.hasOwnProperty(key)) {
                     // button1, group1 などが自動的に self に登録される
                     self[key] = extractedVars[key];
-                    $.writeln("FakeWindow関数で、selfに追加: " + key); // デバッグ用
+                    $.writeln("DefineGUI関数で、selfに追加: " + key); // デバッグ用
                 }
             }
 
@@ -183,15 +195,7 @@ function CSurface( DlgName ) {
             alert("GUI実行エラー: " + e.message);
         }
     })(FakeWindow);
-
-
-    // GUIに変更を入れる
-    self.button1.text = localize(LangStrings.confirm);
-    self.button1.onClick = function() { self.onSayHelloWorldClick(); }
 }
-
-// 2. クラス継承
-ClassInheritance(CSurface, CPaletteWindow);
 
 
 //-----------------------------------

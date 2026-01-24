@@ -106,6 +106,9 @@ CGirl.prototype.HayHello = function() {
 }
 
 
+
+
+
  //-----------------------------------
 // クラス CSurface
 //-----------------------------------
@@ -117,12 +120,25 @@ function CSurface( DlgName ) {
     // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
     this.constructor.TheObj = this;
 
-    // クラスへのポインタを確保
-    var self = this;
+    var Dlg = this.m_Dialog;    // ダイアログへのポインタを確保
+    var self = this;            // クラスへののポインタを確保
 
-    // ダイアログにボタン追加
-    var myButton = self.AddButton( localize(LangStrings.confirm) );
-    myButton.onClick = function() { self.onSayHelloWorldClick(); }
+
+    // GUIを定義
+//var Dlg = new Window("dialog"); 
+    Dlg.text = "Dialog"; 
+    Dlg.orientation = "column"; 
+    Dlg.alignChildren = ["center","top"]; 
+    Dlg.spacing = 10; 
+    Dlg.margins = 16; 
+
+var button1 = Dlg.add("button", undefined, undefined, {name: "button1"}); 
+    button1.text = "Push this button"; 
+
+
+    // GUIに変更を入れる
+    button1.text = localize(LangStrings.confirm);
+    button1.onClick = function() { self.onSayHelloWorldClick(); }
 }
 
 // 2. クラス継承

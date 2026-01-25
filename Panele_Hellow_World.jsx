@@ -22,12 +22,8 @@
 
 // Ver.1.0 : 2026/01/25
 
-
 #target illustrator
 #targetengine "main"
-
-$.localize = true;  // 多言語対応するための記述
-
 
 SELF = (function(){
     try {app.documents.test()}
@@ -69,7 +65,6 @@ function CHuman() {
 
 // 2. プロトタイプメソッドの定義
 CHuman.prototype.HayHelloAnyone = function( Anyone ) {
-    //alert($.locale);
     alert(LangStrings.hello_world + "\n" + Anyone );
 }
 
@@ -88,7 +83,6 @@ ClassInheritance(CBoy, CHuman);
 
 // 3. プロトタイプメソッドの定義
 CBoy.prototype.HayHello = function() {
-    //alert($.locale);
     this.HayHelloAnyone( LangStrings.boy );
 }
 
@@ -110,19 +104,15 @@ CGirl.prototype.HayHello = function() {
     this.HayHelloAnyone( LangStrings.girl );
 }
 
- //-----------------------------------
-// クラス CSurface
+
+//-----------------------------------
+// クラス CHelloWorldDlg
 //-----------------------------------
 
 // 1. コンストラクタ定義
-function CSurface( DlgName ) {
-    CPaletteWindow.call( this,false );       // コンストラクタ
-    this.InitDialog( DlgName );              // イニシャライザ
-
-    var self = this;            // クラスへののポインタを確保
-
-    // インスタンスのコンストラクタ（子クラス自身）の静的プロパティに保存することで、動的に静的プロパティを定義
-    self.constructor.TheObj = self;
+function CHelloWorldDlg() {
+    CPaletteWindow.call( this, false );      // コンストラクタ
+    var self = this;                         // クラスへののポインタを確保
 
     // GUI用のスクリプトを読み込む
     var selfFile = new File($.fileName);
@@ -132,36 +122,21 @@ function CSurface( DlgName ) {
         // GUIに変更を入れる
         self.button1.onClick = function() { self.onSayHelloWorldClick(); }
     }
-    else{
+    else {
         alert("GUIが未定です");
+        return;
     }
 }
 
 // 2. クラス継承
-ClassInheritance(CSurface, CPaletteWindow);
-
-
-//-----------------------------------
-// クラス CHelloWorldDlg
-//-----------------------------------
-
-// 1. コンストラクタ定義
-function CHelloWorldDlg( DlgName ) {
-
-    CSurface.call( this, DlgName );   // コンストラクタ
-
-    var self = this;
-}
-
-// 2. クラス継承
-ClassInheritance(CHelloWorldDlg, CSurface);
+ClassInheritance(CHelloWorldDlg, CPaletteWindow);
 
 // 3. 静的メソッドの定義
 CHelloWorldDlg.SayHelloWorld = function() {
-    var Dlg = CHelloWorldDlg.TheObj;    // 動的に生成された静的プロパティ
-    Dlg.HelloWorld( new CBoy() );
-    Dlg.HelloWorld( new CGirl() );
-    Dlg.CloseDlg();
+    var self = CHelloWorldDlg.self;
+    self.HelloWorld( new CBoy() );
+    self.HelloWorld( new CGirl() );
+    self.CloseDlg();
 }  
 
 // 4. プロトタイプメソッドの定義
@@ -181,7 +156,7 @@ CHelloWorldDlg.prototype.HelloWorld = function( Human ) {
  
 
 //インスタンスを生成。
-var DlgHello = new CHelloWorldDlg( "HelloWorld" );
+var DlgHello = new CHelloWorldDlg();
 
 main();
 

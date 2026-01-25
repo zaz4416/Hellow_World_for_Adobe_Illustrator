@@ -38,10 +38,6 @@ $.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
 
 // 言語ごとの辞書を定義
 var LangStrings = {
-    confirm: {
-        en: "Push this button",
-        ja: "このボタンを押してください"
-    },
     hello_world: {
         en: "Hello world",
         ja: "こんにちは世界"
@@ -125,11 +121,12 @@ function CSurface( DlgName ) {
     // GUI用のスクリプトを読み込む
     var selfFile = new File($.fileName);
     var currentDir = selfFile.parent;
+    alert($.locale);
     var GUI_JSX = {en : "ScriptUI Dialog Builder - Export_EN.jsx", ja : "ScriptUI Dialog Builder - Export_JP.jsx"} ;
+    alert(GUI_JSX);
     if ( self.LoadGUIfromJSX( currentDir.fullName + "/GUI.Panele_Hellow_World/" + GUI_JSX ) )
     {
         // GUIに変更を入れる
-        self.button1.text = localize(LangStrings.confirm);
         self.button1.onClick = function() { self.onSayHelloWorldClick(); }
     }
     else{

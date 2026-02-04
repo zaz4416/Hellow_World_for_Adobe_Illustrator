@@ -20,18 +20,19 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/01/28
+// Ver.1.0 : 2026/02/04
 
 #target illustrator
 #targetengine "main"
 
-SELF = (function(){
-    try {app.documents.test()}
-    catch(e) {return File(e.fileName)}
+
+var SELF_FILE = (function() {
+try { var path = $.fileName || Folder.current.fullName; return new File(decodeURI(path)); } catch (e) { return null; }
 })();
+var SCRIPT_DIR = (SELF_FILE !== null) ? SELF_FILE.parent : Folder.current;
 
 // 外部のJSXを読み込む
-$.evalFile(SELF.path + "/ZazLib/" + "PaletteWindow.jsx");
+$.evalFile(SCRIPT_DIR + "/ZazLib/" + "PaletteWindow.jsx");
 
 
 // 言語ごとの辞書を定義
@@ -120,7 +121,7 @@ function CHelloWorldDlg() {
     // GUI用のスクリプトを読み込む
     var selfFile = new File($.fileName);
     var currentDir = selfFile.parent;
-    if ( self.LoadGUIfromJSX( currentDir.fullName + "/GUI.Panele_Hellow_World/" + LangStrings.GUI_JSX ) )
+    if ( self.LoadGUIfromJSX( currentDir.fullName + "/GUI/Panele_Hellow_World/" + LangStrings.GUI_JSX ) )
     {
         // GUIに変更を入れる
         self.button1.onClick = function() { self.onSayHelloWorldClick(); }

@@ -20,26 +20,42 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/04
+// Ver.1.0 : 2026/02/05
 
 #target illustrator
 #targetengine "main"
 
 
-var SELF_FILE = (function() {
-try { var path = $.fileName || Folder.current.fullName; return new File(decodeURI(path)); } catch (e) { return null; }
-})();
-var SCRIPT_DIR = (SELF_FILE !== null) ? SELF_FILE.parent : Folder.current;
+/**
+ * 実行中スクリプトの親フォルダ（Folderオブジェクト）を返す。
+ * なお、戻り値の最後には/が付与される。
+ */
+function GetScriptDir() {
+    var selfFile = null;
+    try {
+        selfFile = new File(decodeURI($.fileName || Folder.current.fullName));
+    } catch (e) {
+        return Folder.current.fullName.replace(/\/*$/, "/");
+    }
+    var dirPath = (selfFile !== null) ? selfFile.parent.fullName : Folder.current.fullName;
 
-// 外部のJSXを読み込む
-$.evalFile(SCRIPT_DIR + "/ZazLib/" + "PaletteWindow.jsx");
+    // 末尾にスラッシュがなければ付与して返す
+    return dirPath.replace(/\/*$/, "/");
+}
+
+
+// スクリプト実行時に外部のJSXを読み込む
+//$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
+
+// 外部のスクリプトを埋め込む
+#include "zazlib/PaletteWindow.jsx"
 
 
 // 言語ごとの辞書を定義
 var MyDictionary = {
     GUI_JSX: {
-        en : "ScriptUI Dialog Builder - Export_EN.jsx",
-        ja : "ScriptUI Dialog Builder - Export_JP.jsx"
+        en : "GUI/Panele_Hellow_World/ScriptUI Dialog Builder - Export_EN.jsx",
+        ja : "GUI/Panele_Hellow_World/ScriptUI Dialog Builder - Export_JP.jsx"
     },
     hello_world: {
         en: "Hello world",
@@ -119,9 +135,7 @@ function CHelloWorldDlg() {
     var self = this;                         // クラスへののポインタを確保
 
     // GUI用のスクリプトを読み込む
-    var selfFile = new File($.fileName);
-    var currentDir = selfFile.parent;
-    if ( self.LoadGUIfromJSX( currentDir.fullName + "/GUI/Panele_Hellow_World/" + LangStrings.GUI_JSX ) )
+    if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
     {
         // GUIに変更を入れる
         self.button1.onClick = function() { self.onSayHelloWorldClick(); }

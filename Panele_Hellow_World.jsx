@@ -45,7 +45,7 @@ function GetScriptDir() {
 
 
 // スクリプト実行時に外部のJSXを読み込む
-//$.evalFile(GetScriptDir() + "ZazLib/" + "PaletteWindow.jsx");
+//$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
 
 // 外部のスクリプトを埋め込む
 #include "zazlib/PaletteWindow.jsx"

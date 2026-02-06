@@ -34,7 +34,7 @@
 
 
 // $.global.myInstancesが定義されていたら、解放する
-//CloseAllInstances();
+CloseAllInstances();
 
 
 /**
@@ -91,23 +91,34 @@ if (!($.global.myInstances instanceof Array)) {
     $.global.myInstances = [];
 }
 
-function RegisterInstance(obj) {
 
-    /*
-    // メソッドも含めて完全に複製（推奨）
-    const newInst = new MyDialogClass();
+/**
+ * オブジェクトのプロトタイプを継承しつつ、プロパティをコピーする（ES3互換）
+ * @param {Object} obj - コピー元のインスタンス
+ * @returns {Object} - 新しく生成されたクローン
+ */
+function cloneInstance(obj) {
+    if (obj === null || typeof obj !== "object") return obj;
 
-    // プロトタイプ（メソッド）を維持したまま、中身をコピー
-    $.global.myInstances[this.ObjectNo] = Object.assign(
-        Object.create(Object.getPrototypeOf(newInst)), 
-        newInst
-    );
-    */
-    obj.ObjectNo = $.global.myInstances.length;
-    $.global.myInstances.push(obj);
+    // 1. プロトタイプを継承した新しいオブジェクトを作成
+    var F = function() {};
+    F.prototype = obj.constructor ? obj.constructor.prototype : Object.prototype;
+    var clone = new F();
+
+    // 2. 自身のプロパティをコピー (Object.assignの代用)
+    for (var key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            clone[key] = obj[key];
+        }
+    }
+    return clone;
+}
+
+
+function RegisterInstance(newInst) {
+    $.global.myInstances.push( cloneInstance(newInst) );
     var No = $.global.myInstances.length -1;
     $.writeln("オブジェクト登録完了。現在の登録数:" + $.global.myInstances.length + ", 登録No=" + No);
-
     return No;
 }
 
@@ -125,6 +136,11 @@ function CloseAllInstances() {
         }
         $.global.myInstances = []; // 配列をリセット
     }
+}
+
+function GetGlobalClass(No) {
+    var name = "$.global.myInstances[" + No + "].";
+    return name;
 }
 
 //-----------------------------------
@@ -202,20 +218,36 @@ function CHelloWorldDlg() {
 // 2. クラス継承
 ClassInheritance(CHelloWorldDlg, CPaletteWindow);
 
-// 3. 静的メソッドの定義
+
+CHelloWorldDlg.prototype.show = function() {
+    var self = this;
+    $.writeln( "ObjectNo is " + self.ObjectNo + " in show()." );
+    self.m_Dialog.show();
+    //eval( self.GetGlobalClass() + "m_Dialog.show()" );
+} 
+
 CHelloWorldDlg.prototype.SayHelloWorld = function() {
-    var self = CHelloWorldDlg.self;
+    var self = this;
+    alert( "SayHelloWorld:No.(" + self.ObjectNo + ")" );
     self.HelloWorld( new CBoy() );
     self.HelloWorld( new CGirl() );
-    eval( self.GetGlobalClass()+"m_Dialog.close()" );
+    slef.m_Dialog.close();
+    //eval( self.GetGlobalClass()+"m_Dialog.close()" );
 } 
 
 CHelloWorldDlg.prototype.CallFuncByGlobal = function( FuncName ) {
     var self = this;
-    var bt = new BridgeTalk;
-    bt.target = BridgeTalk.appSpecifier;
-    bt.body   = self.GetGlobalClass() + FuncName + "();";
-    bt.send();
+
+    alert(self.ObjectNo);
+
+    if ( ObjectNo >= 0 ) {
+        var bt = new BridgeTalk;
+        bt.target = BridgeTalk.appSpecifier;
+        bt.body   = self.GetGlobalClass() + FuncName + "();";
+        bt.send();
+    } else {
+        alert("Undefine ObjectNo in CallFuncByGlobal.");
+    }
 }
 
 CHelloWorldDlg.prototype.GetGlobalClass = function() {
@@ -225,9 +257,11 @@ CHelloWorldDlg.prototype.GetGlobalClass = function() {
 
 // 4. プロトタイプメソッドの定義
 CHelloWorldDlg.prototype.onSayHelloWorldClick = function() {
+    var self = this;
     try
     {
-        this.CallFuncByGlobal( "SayHelloWorld" );
+        alert("onSayHelloWorldClick:No=" + self.ObjectNo);
+        self.CallFuncByGlobal( "SayHelloWorld" );
     }
     catch(e)
     {
@@ -243,12 +277,11 @@ main();
 
 function main()
 {
-    var Obj = new CHelloWorldDlg();
-
     // 実行するたびに配列に新しいインスタンスが追加されていきます
-    var No = RegisterInstance( Obj );
+    var No = RegisterInstance( new CHelloWorldDlg() );
 
     // 最新のインスタンスを表示
-    //$.global.myInstances[ No ].m_Dialog.show();
-    eval( Obj.GetGlobalClass()+"m_Dialog.show()" );
+    eval( GetGlobalClass( No ) + "ObjectNo=" + No );
+    //eval( "alert(" + GetGlobalClass( No ) + "ObjectNo);" ) ;
+    eval( GetGlobalClass( No ) + "show()" );
 }

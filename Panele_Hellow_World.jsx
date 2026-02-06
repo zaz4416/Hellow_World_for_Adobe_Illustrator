@@ -122,11 +122,18 @@ function cloneInstance(obj) {
  * @returns {数字} - 登録No(0〜)
  */
 function RegisterInstance(newInst) {
+    // newInstのプロパティに登録させたい値があれば、pushする前に、ここですること！！
+    if (typeof $.global.myInstances === "undefined") {
+        newInst.ObjectNo = 0;
+    } else{
+        newInst.ObjectNo = $.global.myInstances.length;
+    }
+
+    // newInstをpush
     $.global.myInstances.push( cloneInstance(newInst) );
-    var No = $.global.myInstances.length -1;
-    eval( GetGlobalClass( No ) + "ObjectNo=" + No );
-    $.writeln("オブジェクト登録完了。現在の登録数:" + $.global.myInstances.length + ", 登録No=" + No);
-    return No;
+
+    $.writeln("オブジェクト登録完了。現在の登録数:" + $.global.myInstances.length + ", 登録No=" + newInst.ObjectNo);
+    return newInst.ObjectNo;;
 }
 
 
@@ -239,7 +246,7 @@ CHelloWorldDlg.prototype.show = function() {
 
 CHelloWorldDlg.prototype.SayHelloWorld = function() {
     var self = this;
-    alert( "SayHelloWorld:No.(" + self.ObjectNo + ")" );
+    //alert( "ObjectNo is " + self.ObjectNo + " in SayHelloWorld()." );
     self.HelloWorld( new CBoy() );
     self.HelloWorld( new CGirl() );
     slef.m_Dialog.close();
@@ -249,9 +256,9 @@ CHelloWorldDlg.prototype.SayHelloWorld = function() {
 CHelloWorldDlg.prototype.CallFuncByGlobal = function( FuncName ) {
     var self = this;
 
-    alert(self.ObjectNo);
+    //alert( "ObjectNo is " + self.ObjectNo + " in CallFuncByGlobal()." );
 
-    if ( ObjectNo >= 0 ) {
+    if ( self.ObjectNo >= 0 ) {
         var bt = new BridgeTalk;
         bt.target = BridgeTalk.appSpecifier;
         bt.body   = self.GetGlobalClass() + FuncName + "();";
@@ -271,7 +278,6 @@ CHelloWorldDlg.prototype.onSayHelloWorldClick = function() {
     var self = this;
     try
     {
-        alert("onSayHelloWorldClick:No=" + self.ObjectNo);
         self.CallFuncByGlobal( "SayHelloWorld" );
     }
     catch(e)
@@ -279,6 +285,7 @@ CHelloWorldDlg.prototype.onSayHelloWorldClick = function() {
         alert( e.message );
     }
 }
+
 CHelloWorldDlg.prototype.HelloWorld = function( ClassOfSomeone ) {
     ClassOfSomeone.HayHello();
 }

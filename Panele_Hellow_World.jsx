@@ -86,12 +86,6 @@ var MyDictionary = {
 var LangStrings = GetWordsFromDictionary( MyDictionary );
 
 
-
-if (!($.global.myInstances instanceof Array)) {
-    $.global.myInstances = [];
-}
-
-
 // --- グローバル関数 -----------------------------------------------------------------
 /**
  * オブジェクトのプロトタイプを継承しつつ、プロパティをコピーする（ES3互換）
@@ -124,6 +118,7 @@ function cloneInstance(obj) {
 function RegisterInstance(newInst) {
     // newInstのプロパティに登録させたい値があれば、pushする前に、ここですること！！
     if (typeof $.global.myInstances === "undefined") {
+        $.global.myInstances = [];
         newInst.ObjectNo = 0;
     } else{
         newInst.ObjectNo = $.global.myInstances.length;

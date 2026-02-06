@@ -34,7 +34,7 @@
 
 
 // $.global.myInstancesが定義されていたら、解放する
-CloseAllInstances();
+//CloseAllInstances();
 
 
 /**
@@ -92,6 +92,7 @@ if (!($.global.myInstances instanceof Array)) {
 }
 
 
+// --- グローバル関数 -----------------------------------------------------------------
 /**
  * オブジェクトのプロトタイプを継承しつつ、プロパティをコピーする（ES3互換）
  * @param {Object} obj - コピー元のインスタンス
@@ -115,11 +116,23 @@ function cloneInstance(obj) {
 }
 
 
+/**
+ * $.global.myInstancesに、オブジェクトのクローンを登録する
+ * @param {Object} newInst - インスタンス
+ * @returns {数字} - 登録No(0〜)
+ */
 function RegisterInstance(newInst) {
     $.global.myInstances.push( cloneInstance(newInst) );
     var No = $.global.myInstances.length -1;
+    eval( GetGlobalClass( No ) + "ObjectNo=" + No );
     $.writeln("オブジェクト登録完了。現在の登録数:" + $.global.myInstances.length + ", 登録No=" + No);
     return No;
+}
+
+
+function GetGlobalClass(No) {
+    var name = "$.global.myInstances[" + No + "].";
+    return name;
 }
 
 
@@ -138,10 +151,8 @@ function CloseAllInstances() {
     }
 }
 
-function GetGlobalClass(No) {
-    var name = "$.global.myInstances[" + No + "].";
-    return name;
-}
+// ---------------------------------------------------------------------------------
+
 
 //-----------------------------------
 // クラス CHuman
@@ -281,7 +292,5 @@ function main()
     var No = RegisterInstance( new CHelloWorldDlg() );
 
     // 最新のインスタンスを表示
-    eval( GetGlobalClass( No ) + "ObjectNo=" + No );
-    //eval( "alert(" + GetGlobalClass( No ) + "ObjectNo);" ) ;
     eval( GetGlobalClass( No ) + "show()" );
 }

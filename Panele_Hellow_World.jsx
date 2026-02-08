@@ -141,8 +141,8 @@ CGirl.prototype.HayHello = function() {
 //-----------------------------------
 
 // 1. コンストラクタ定義
-function CHelloWorldDlg() {
-    CPaletteWindow.call( this, _MAX_INSTANCES, false );      // コンストラクタ
+function CHelloWorldDlg( scriptName ) {
+    CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
     var self = this;                                         // クラスへののポインタを確保
 
     // GUI用のスクリプトを読み込む
@@ -195,8 +195,16 @@ function main()
 {
     try
     {
+        // 実行中のスクリプト名を取得（拡張子なし）
+        var scriptName = decodeURI(File($.fileName).name).replace(/\.[^\.]+$/, "");
+
         // 新しいインスタンスを生成
-        var Obj  = new CHelloWorldDlg() ;
+        var Obj  = new CHelloWorldDlg( scriptName ) ;
+
+        // インデックスをタイトルの先頭に表示
+        var Index = Obj.GetGlobalIndex();
+        var Title = Obj.GetDialogTitle();
+        Obj.SetDialogTitle( "[" + Index + "]" + Title );
 
         // インスタンスを表示
         Obj.show();

@@ -27,17 +27,14 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/07
+// Ver.1.0 : 2026/02/08
 
 #target illustrator
 #targetengine "main"
 
 
-// スクリプト実行時に外部のJSXを読み込む
-//$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
-
-// 外部のスクリプトを埋め込む
-#include "zazlib/PaletteWindow.jsx"
+// スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
+$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
 
 
 // 言語ごとの辞書を定義
@@ -144,8 +141,8 @@ CGirl.prototype.HayHello = function() {
 //-----------------------------------
 
 // 1. コンストラクタ定義
-function CHelloWorldDlg() {
-    CPaletteWindow.call( this, _MAX_INSTANCES, false );      // コンストラクタ
+function CHelloWorldDlg( scriptName ) {
+    CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
     var self = this;                                         // クラスへののポインタを確保
 
     // GUI用のスクリプトを読み込む
@@ -198,8 +195,16 @@ function main()
 {
     try
     {
+        // 実行中のスクリプト名を取得（拡張子なし）
+        var scriptName = decodeURI(File($.fileName).name).replace(/\.[^\.]+$/, "");
+
         // 新しいインスタンスを生成
-        var Obj  = new CHelloWorldDlg() ;
+        var Obj  = new CHelloWorldDlg( scriptName ) ;
+
+        // インデックスをタイトルの先頭に表示
+        var Index = Obj.GetGlobalIndex();
+        var Title = Obj.GetDialogTitle();
+        Obj.SetDialogTitle( "[" + Index + "]" + Title );
 
         // インスタンスを表示
         Obj.show();

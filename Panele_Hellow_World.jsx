@@ -27,10 +27,51 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/08
+// Ver.1.0 : 2026/02/09
 
 #target illustrator
 #targetengine "main"
+
+
+//-----------------------------------
+// クラス CControlIndex
+//-----------------------------------
+
+// 1. コンストラクタ定義
+function CControlIndex(storageKey, Max) {
+    var self = this;
+    self.MAX_INSTANCES = Max;
+    self.indexKey = "idx_"   + storageKey;
+
+    // $.global[self.indexKey] が未定義の時にだけ、初期化
+    if ( $.global[self.indexKey] === undefined ) {
+        self.Init();
+    }
+}
+
+// 初期化
+CControlIndex.prototype.Init = function() {
+    var self = this;
+    $.global[ self.indexKey ] = 0;
+}
+
+// インデックスを得る
+CControlIndex.prototype.GetIndex = function( Max ) {
+    var self = this;
+    var index = $.global[ self.indexKey ];
+    var nextIndex = ( index + 1 ) % self.MAX_INSTANCES;
+    $.global[ self.indexKey ] = nextIndex;
+    $.writeln( "CControlIndex::GetIndex(), Next index is " + nextIndex );
+    return index;
+}
+
+// インデックスが破棄された
+CControlIndex.prototype.DeleteIndex = function( idx ) {
+    var self = this;
+    //alert( "CControlIndex::DeleteIndex(), delete index is " + idx );
+}
+
+
 
 
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)

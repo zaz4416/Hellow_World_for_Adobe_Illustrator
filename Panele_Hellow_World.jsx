@@ -32,14 +32,16 @@
 #target illustrator
 #targetengine "main"
 
-// //$.global[ self.indexKey ] ;
+
+//-----------------------------------
+// クラス CControlIndex
+//-----------------------------------
 
 // 1. コンストラクタ定義
 function CControlIndex(storageKey, Max) {
     var self = this;
     self.MAX_INSTANCES = Max;
-    self.m_Index = 0;
-    self.indexKey   = "idx_"   + storageKey;
+    self.indexKey = "idx_"   + storageKey;
 
     // $.global[self.indexKey] が未定義の時にだけ、初期化
     if ( $.global[self.indexKey] === undefined ) {

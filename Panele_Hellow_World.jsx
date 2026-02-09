@@ -52,23 +52,23 @@ function CControlIndex(storageKey, Max) {
 // 初期化
 CControlIndex.prototype.Init = function() {
     var self = this;
-    $.global[ self.indexKey ] = 0;
+    $.global[self.indexKey] = [];
+    for ( lp=self.MAX_INSTANCES; lp>=0; lp-- ) {
+        $.global[self.indexKey].push(lp);
+    }
 }
 
 // インデックスを得る
 CControlIndex.prototype.GetIndex = function( Max ) {
     var self = this;
-    var index = $.global[ self.indexKey ];
-    var nextIndex = ( index + 1 ) % self.MAX_INSTANCES;
-    $.global[ self.indexKey ] = nextIndex;
-    $.writeln( "CControlIndex::GetIndex(), Next index is " + nextIndex );
+    var index = $.global[self.indexKey].pop();
     return index;
 }
 
 // インデックスが破棄された
 CControlIndex.prototype.DeleteIndex = function( idx ) {
     var self = this;
-    //alert( "CControlIndex::DeleteIndex(), delete index is " + idx );
+    $.global[self.indexKey].push( idx );
 }
 
 

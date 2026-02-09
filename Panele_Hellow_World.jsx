@@ -49,11 +49,13 @@ function CControlIndex(storageKey, Max) {
     }
 }
 
+// 初期化
 CControlIndex.prototype.Init = function() {
     var self = this;
     $.global[ self.indexKey ] = 0;
 }
 
+// インデックスを得る
 CControlIndex.prototype.GetIndex = function( Max ) {
     var self = this;
     var index = $.global[ self.indexKey ];
@@ -62,6 +64,14 @@ CControlIndex.prototype.GetIndex = function( Max ) {
     $.writeln( "CControlIndex::GetIndex(), Next index is " + nextIndex );
     return index;
 }
+
+// インデックスが破棄された
+CControlIndex.prototype.DeleteIndex = function( idx ) {
+    var self = this;
+    //alert( "CControlIndex::DeleteIndex(), delete index is " + idx );
+}
+
+
 
 
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)

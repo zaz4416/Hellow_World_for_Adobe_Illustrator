@@ -55,6 +55,10 @@ var MyDictionary = {
         en: "I'm girl",
         ja: "私は女の子です"
     },
+    msg_cant_run: {
+        en: "Can't run",
+        ja: "これ以上、起動できません"
+    }
 };
 
 // --- LangStringsの辞書から自動翻訳処理 ---
@@ -145,19 +149,14 @@ function CHelloWorldDlg( scriptName ) {
     CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
     var self = this;
 
-    if ( self.m_Dialog != null ) {
+    if ( self.IsGetDlg()) {
         // GUI用のスクリプトを読み込む
-        if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
-        {
+        if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) ) {
             // GUIに変更を入れる
             self.button1.onClick = function() { self.onSayHelloWorldClick(); }
 
             // 最後に、新しいインスタンスを追加
             self.RegisterInstance();
-        }
-        else {
-            alert("GUIが未定です");
-            return;
         }
     }
 }
@@ -212,7 +211,7 @@ function main()
             // インスタンスを表示
             Obj.show();
         } else {
-            alert("これ以上、起動できません")
+            alert( LangStrings.msg_cant_run );
         }
     }
     catch(e)

@@ -33,47 +33,6 @@
 #targetengine "main"
 
 
-//-----------------------------------
-// クラス CControlIndex
-//-----------------------------------
-
-// 1. コンストラクタ定義
-function CControlIndex(storageKey, Max) {
-    var self = this;
-    self.MAX_INSTANCES = Max;
-    self.indexKey = "idx_"   + storageKey;
-
-    // $.global[self.indexKey] が未定義の時にだけ、初期化
-    if ( $.global[self.indexKey] === undefined ) {
-        self.Init();
-    }
-}
-
-// 初期化
-CControlIndex.prototype.Init = function() {
-    var self = this;
-    $.global[self.indexKey] = [];
-    for ( lp=self.MAX_INSTANCES; lp>=0; lp-- ) {
-        $.global[self.indexKey].push(lp);
-    }
-}
-
-// インデックスを得る
-CControlIndex.prototype.GetIndex = function( Max ) {
-    var self = this;
-    var index = $.global[self.indexKey].pop();
-    return index;
-}
-
-// インデックスが破棄された
-CControlIndex.prototype.DeleteIndex = function( idx ) {
-    var self = this;
-    $.global[self.indexKey].push( idx );
-}
-
-
-
-
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
 $.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
 
@@ -184,20 +143,22 @@ CGirl.prototype.HayHello = function() {
 // 1. コンストラクタ定義
 function CHelloWorldDlg( scriptName ) {
     CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
-    var self = this;                                         // クラスへののポインタを確保
+    var self = this;
 
-    // GUI用のスクリプトを読み込む
-    if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
-    {
-        // GUIに変更を入れる
-        self.button1.onClick = function() { self.onSayHelloWorldClick(); }
+    if ( self.m_Dialog != null ) {
+        // GUI用のスクリプトを読み込む
+        if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) )
+        {
+            // GUIに変更を入れる
+            self.button1.onClick = function() { self.onSayHelloWorldClick(); }
 
-        // 最後に、新しいインスタンスを追加
-        self.RegisterInstance();
-    }
-    else {
-        alert("GUIが未定です");
-        return;
+            // 最後に、新しいインスタンスを追加
+            self.RegisterInstance();
+        }
+        else {
+            alert("GUIが未定です");
+            return;
+        }
     }
 }
 
@@ -242,13 +203,17 @@ function main()
         // 新しいインスタンスを生成
         var Obj  = new CHelloWorldDlg( scriptName ) ;
 
-        // インデックスをタイトルの先頭に表示
-        var Index = Obj.GetGlobalIndex();
-        var Title = Obj.GetDialogTitle();
-        Obj.SetDialogTitle( "[" + Index + "]" + Title );
+        if ( Obj.IsGetDlg() ) {
+            // インデックスをタイトルの先頭に表示
+            var Index = Obj.GetGlobalIndex();
+            var Title = Obj.GetDialogTitle();
+            Obj.SetDialogTitle( "[" + Index + "]" + Title );
 
-        // インスタンスを表示
-        Obj.show();
+            // インスタンスを表示
+            Obj.show();
+        } else {
+            alert("これ以上、起動できません")
+        }
     }
     catch(e)
     {

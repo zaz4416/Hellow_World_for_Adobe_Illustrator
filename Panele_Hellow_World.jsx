@@ -27,10 +27,39 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/08
+// Ver.1.0 : 2026/02/09
 
 #target illustrator
 #targetengine "main"
+
+// //$.global[ self.indexKey ] ;
+
+// 1. コンストラクタ定義
+function CControlIndex(storageKey, Max) {
+    var self = this;
+    self.MAX_INSTANCES = Max;
+    self.m_Index = 0;
+    self.indexKey   = "idx_"   + storageKey;
+
+    // $.global[self.indexKey] が未定義の時にだけ、初期化
+    if ( $.global[self.indexKey] === undefined ) {
+        self.Init();
+    }
+}
+
+CControlIndex.prototype.Init = function() {
+    var self = this;
+    $.global[ self.indexKey ] = 0;
+}
+
+CControlIndex.prototype.GetIndex = function( Max ) {
+    var self = this;
+    var index = $.global[ self.indexKey ];
+    var nextIndex = ( index + 1 ) % self.MAX_INSTANCES;
+    $.global[ self.indexKey ] = nextIndex;
+    $.writeln( "CControlIndex::GetIndex(), Next index is " + nextIndex );
+    return index;
+}
 
 
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)

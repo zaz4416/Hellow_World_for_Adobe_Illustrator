@@ -27,7 +27,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/09
+// Ver.1.0 : 2026/02/10
 
 #target illustrator
 #targetengine "main"
@@ -149,7 +149,7 @@ function CHelloWorldDlg( scriptName ) {
     CPaletteWindow.call( this, scriptName, _MAX_INSTANCES, false );      // コンストラクタ
     var self = this;
 
-    if ( self.IsGetDlg()) {
+    if ( self.IsDialg()) {
         // GUI用のスクリプトを読み込む
         if ( self.LoadGUIfromJSX( GetScriptDir() + LangStrings.GUI_JSX ) ) {
             // GUIに変更を入れる
@@ -202,7 +202,7 @@ function main()
         // 新しいインスタンスを生成
         var Obj  = new CHelloWorldDlg( scriptName ) ;
 
-        if ( Obj.IsGetDlg() ) {
+        if ( Obj.IsDialg() ) {
             // インデックスをタイトルの先頭に表示
             var Index = Obj.GetGlobalIndex();
             var Title = Obj.GetDialogTitle();

@@ -5,8 +5,9 @@ on:
 
 jobs:
   sync:
-    # ★ここを追加：自分宛ての通知（自分が発信源の更新）なら実行しない
-    if: github.event.client_payload.target_repo == github.repository
+    # 自分自身への通知（自分が起点の更新）の場合はジョブ自体をスキップする
+    # ユーザー名/リポジトリ名 が完全一致しない場合のみ実行
+    if: github.event.client_payload.target_repo != github.repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project Repo

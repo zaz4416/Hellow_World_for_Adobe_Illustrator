@@ -1,0 +1,43 @@
+﻿name: Contribute zazlib to Common Lib
+on:
+  push:
+    paths:
+      - 'zazlib/**' # zazlibフォルダが更新された時だけ動く
+    branches:
+      - main # または master
+
+jobs:
+  contribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          path: project-repo
+
+      - name: Checkout Common Lib
+        uses: actions/checkout@v4
+        with:
+          repository: zaz4416/ZazLib # ★共通リポジトリ名
+          token: ${{ secrets.MY_PAT }}
+          path: common-lib
+
+      - name: Sync Back to Common
+        run: |
+          # プロジェクトのzazlibの中身を共通リポジトリのルートに同期
+          rsync -av --delete \
+            --exclude ".git/" \
+            --exclude ".github/" \
+            project-repo/zazlib/ common-lib/
+
+      - name: Create Pull Request on Common Lib
+        uses: peter-evans/create-pull-request@v5
+        with:
+          path: common-lib
+          token: ${{ secrets.MY_PAT }}
+          branch: update-from-${{ github.event.repository.name }}
+          title: "🚀 Update from ${{ github.event.repository.name }}"
+          body: |
+            プロジェクト側での修正を共通リポジトリへ提案します。
+            ソース: ${{ github.event.repository.html_url }}
+          commit-message: "Update common files from ${{ github.event.repository.name }}"

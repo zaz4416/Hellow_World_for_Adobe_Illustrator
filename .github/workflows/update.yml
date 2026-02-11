@@ -6,7 +6,7 @@ on:
 jobs:
   sync:
     # デバッグ中は一旦 if をコメントアウトして、必ず実行されるようにしてログを確認します
-    # if: github.event.client_payload.target_repo != github.repository
+    # if: github.event.client_payload.target_repo == github.repository
     runs-on: ubuntu-latest
     steps:
       # --- デバッグ用：文字列の比較ログ ---

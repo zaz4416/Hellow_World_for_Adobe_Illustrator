@@ -5,11 +5,18 @@ on:
 
 jobs:
   sync:
-    # 自分自身への通知（自分が起点の更新）の場合はジョブ自体をスキップする
-    # ユーザー名/リポジトリ名 が完全一致しない場合のみ実行
-    if: github.event.client_payload.target_repo != github.repository
+    # デバッグ中は一旦 if をコメントアウトして、必ず実行されるようにしてログを確認します
+    # if: github.event.client_payload.target_repo != github.repository
     runs-on: ubuntu-latest
     steps:
+      # --- デバッグ用：文字列の比較ログ ---
+      - name: Debug Payload and Repository Name
+        run: |
+          echo "--- Context Check ---"
+          echo "Payload (from ZazLib): '${{ github.event.client_payload.target_repo }}'"
+          echo "Current (This Repo):  '${{ github.repository }}'"
+          echo "---------------------"
+
       - name: Checkout Project Repo
         uses: actions/checkout@v4
         with:
@@ -31,6 +38,7 @@ jobs:
             common-lib/ project-repo/zazlib/
 
       - name: Create Pull Request
+        # 実際にファイルに差分があるときだけPRを作成する
         uses: peter-evans/create-pull-request@v5
         with:
           path: project-repo

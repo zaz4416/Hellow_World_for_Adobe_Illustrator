@@ -5,16 +5,16 @@ on:
 
 jobs:
   sync:
-    # --- 1. ループ防止（自己PR防止）の判定 ---
-    # 共通リポジトリ（ZazLib）から送られた「対象リポジトリ名」と「自分の名前」を比較
-    # 両者を小文字にして比較し、一致しない（＝他プロジェクトからの更新）場合のみ実行する
+    # --- 1. ループ防止判定（自己PR防止） ---
+    # 送信元の target_repo と 自分の名前（github.repository）が
+    # 【一致しない】ときだけ実行する
     if: |
       github.event.client_payload.target_repo != null &&
-      toLowerCase(github.event.client_payload.target_repo) != toLowerCase(github.repository)
+      format('{0}', github.event.client_payload.target_repo) != github.repository
 
     runs-on: ubuntu-latest
     steps:
-      # --- 2. デバッグ用：文字列の比較ログ（Actionsのログで確認可能） ---
+      # --- 2. デバッグ用：ログで不一致の原因を特定する ---
       - name: Debug Context Check
         run: |
           echo "--- Context Check ---"
@@ -22,7 +22,7 @@ jobs:
           echo "Current (This Repo):  '${{ github.repository }}'"
           echo "---------------------"
 
-      # --- 3. リポジトリの取得 ---
+      # --- 3. リポジトリのチェックアウト ---
       - name: Checkout Project Repo
         uses: actions/checkout@v4
         with:
@@ -39,7 +39,7 @@ jobs:
       - name: Sync zazlib Folder
         run: |
           mkdir -p project-repo/zazlib/
-          # 共通側のルートをプロジェクトのzazlibフォルダへ同期（Git関連は除外）
+          # 共通側のルートをプロジェクトのzazlibへ同期（Git情報は除外）
           rsync -av --delete \
             --exclude ".git/" \
             --exclude ".github/" \
@@ -57,5 +57,3 @@ jobs:
           body: |
             共通リポジトリ(ZazLib)からの更新通知を受信しました。
             `zazlib` フォルダの内容を最新状態に同期しました。
-            
-            ※このPRは自動生成されました。

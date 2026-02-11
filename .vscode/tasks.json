@@ -4,7 +4,7 @@
         {
             "label": "1. Submodule: Commit & Push",
             "type": "shell",
-            "command": "clear && cd zazlib && git add . && git commit -m 'update' && git push origin HEAD:main",
+            "command": "cd zazlib && git add . && git commit -m 'Update zazlib' && git push origin HEAD:main",
             "problemMatcher": []
         },
         {

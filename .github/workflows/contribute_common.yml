@@ -2,9 +2,8 @@
 on:
   push:
     paths:
-      - 'zazlib/**' # zazlibフォルダが更新された時だけ動く
-    branches:
-      - main # または master
+      - 'zazlib/**' # zazlib内の変更時のみ発火
+    branches: [ main ] # プロジェクトのメインブランチ名
 
 jobs:
   contribute:
@@ -18,13 +17,13 @@ jobs:
       - name: Checkout Common Lib
         uses: actions/checkout@v4
         with:
-          repository: zaz4416/ZazLib # ★共通リポジトリ名
-          token: ${{ secrets.MY_PAT }}
+          repository: zaz4416/ZazLib # 共通リポジトリ名
+          token: ${{ secrets.MY_PAT }} # 共通側への書き込み権限が必要
           path: common-lib
 
       - name: Sync Back to Common
         run: |
-          # プロジェクトのzazlibの中身を共通リポジトリのルートに同期
+          # プロジェクトのzazlibを共通リポジトリのルートに同期
           rsync -av --delete \
             --exclude ".git/" \
             --exclude ".github/" \
@@ -37,7 +36,4 @@ jobs:
           token: ${{ secrets.MY_PAT }}
           branch: update-from-${{ github.event.repository.name }}
           title: "🚀 Update from ${{ github.event.repository.name }}"
-          body: |
-            プロジェクト側での修正を共通リポジトリへ提案します。
-            ソース: ${{ github.event.repository.html_url }}
-          commit-message: "Update common files from ${{ github.event.repository.name }}"
+          body: "プロジェクト側での修正を共通リポジトリへ提案します。"

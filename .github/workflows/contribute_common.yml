@@ -57,7 +57,7 @@ jobs:
           body: |
             ## 共通リポジトリへの逆流同期レポート
             
-            **修正元:** [${{ github.repository }}](https://github.com{{ github.repository }})
+            **修正元:** [${{ github.repository }}](https://github.com/${{ github.repository }})
             **対象フォルダ:** `${{ vars.SYNC_FOLDER_NAME }}`
             
             このPRをマージすると、${{ vars.COMMON_REPO_NAME }} 側の通知アクションが走り、

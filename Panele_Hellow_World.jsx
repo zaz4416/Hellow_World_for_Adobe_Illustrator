@@ -27,7 +27,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/10
+// Ver.1.0 : 2026/03/18
 
 #target illustrator
 #targetengine "main"
@@ -193,7 +193,33 @@ CHelloWorldDlg.prototype.HelloWorld = function( ClassOfSomeone ) {
 }
 
 
-main();
+// main関数をグローバルAPI化して呼ぶ
+{
+
+    $.global.main = main;
+
+    // グローバルAPIとして公開
+    $.global.API = {
+        main: function() {
+            main();
+        }
+    };
+
+    // ブリッジトークでmain関数を起動
+    {
+        var bt = new BridgeTalk();
+        bt.target = BridgeTalk.appSpecifier;
+
+        bt.body =
+            '#targetengine "main";\n' +   // ← ここ重要（同じengine）
+            '$.global.API.main();';
+
+        bt.send();
+    }
+}
+
+
+//main();
 
 function main()
 {

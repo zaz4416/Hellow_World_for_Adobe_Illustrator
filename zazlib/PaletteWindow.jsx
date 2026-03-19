@@ -14,7 +14,7 @@ function appVersion() {
   return res ;
 }
 
-
+// main関数を起動するためのスターター関数
 function runMain(main)
 {
     $.global.main = main;

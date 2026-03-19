@@ -27,7 +27,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/02/10
+// Ver.1.0 : 2026/03/18
 
 #target illustrator
 #targetengine "main"
@@ -193,7 +193,9 @@ CHelloWorldDlg.prototype.HelloWorld = function( ClassOfSomeone ) {
 }
 
 
-main();
+// main関数を実行させる
+runMain( main );
+
 
 function main()
 {

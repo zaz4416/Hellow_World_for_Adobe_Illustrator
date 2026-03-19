@@ -27,17 +27,17 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/03/18
+// Ver.1.0 : 2026/03/19
 
 #target illustrator
 #targetengine "main"
 
 
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
-$.evalFile(GetScriptDir() + "ZazLib/ClassInheritance.jsx");
-$.evalFile(GetScriptDir() + "ZazLib/Language.jsx");
-$.evalFile(GetScriptDir() + "ZazLib/GlobalArray.jsx");
-$.evalFile(GetScriptDir() + "ZazLib/PaletteWindow.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/ClassInheritance.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/Language.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/GlobalArray.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/PaletteWindow.jsx");
 
 
 // 言語ごとの辞書を定義

@@ -193,33 +193,9 @@ CHelloWorldDlg.prototype.HelloWorld = function( ClassOfSomeone ) {
 }
 
 
-// main関数をグローバルAPI化して呼ぶ
-{
+// main関数を実行させる
+runMain( main );
 
-    $.global.main = main;
-
-    // グローバルAPIとして公開
-    $.global.API = {
-        main: function() {
-            main();
-        }
-    };
-
-    // ブリッジトークでmain関数を起動
-    {
-        var bt = new BridgeTalk();
-        bt.target = BridgeTalk.appSpecifier;
-
-        bt.body =
-            '#targetengine "main";\n' +   // ← ここ重要（同じengine）
-            '$.global.API.main();';
-
-        bt.send();
-    }
-}
-
-
-//main();
 
 function main()
 {

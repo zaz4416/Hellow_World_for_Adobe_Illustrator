@@ -33,11 +33,11 @@
 #targetengine "main"
 
 
-// スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
+// スクリプト実行時に外部のJSXを読み込む
 #include "ZazLib/ClassInheritance.jsx"
-$.evalFile(File($.fileName).parent + "/ZazLib/Language.jsx");
-$.evalFile(File($.fileName).parent + "/ZazLib/GlobalArray.jsx");
-$.evalFile(File($.fileName).parent + "/ZazLib/PaletteWindow.jsx");
+#include "ZazLib/Language.jsx"
+#include "ZazLib/GlobalArray.jsx"
+#include "ZazLib/PaletteWindow.jsx"
 
 
 // 言語ごとの辞書を定義

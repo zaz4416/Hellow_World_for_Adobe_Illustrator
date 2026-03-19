@@ -34,7 +34,7 @@
 
 
 // スクリプト実行時に外部のJSXを読み込む (#includeにすると、main関数が終了した時点で、ダイアログが表示されなくなる)
-$.evalFile(File($.fileName).parent + "/ZazLib/ClassInheritance.jsx");
+#include "ZazLib/ClassInheritance.jsx"
 $.evalFile(File($.fileName).parent + "/ZazLib/Language.jsx");
 $.evalFile(File($.fileName).parent + "/ZazLib/GlobalArray.jsx");
 $.evalFile(File($.fileName).parent + "/ZazLib/PaletteWindow.jsx");

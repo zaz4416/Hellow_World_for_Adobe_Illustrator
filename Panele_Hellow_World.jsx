@@ -193,15 +193,8 @@ CHelloWorldDlg.prototype.HelloWorld = function( ClassOfSomeone ) {
 }
 
 
-
-// main関数を実行させる
-runMain( main );
-
-
 function main()
 {
-    alert("type = " + typeof CHelloWorldDlg);
-
     try
     {
         // 実行中のスクリプト名を取得（拡張子なし）
@@ -227,3 +220,6 @@ function main()
         alert( e.message );
     }
 }
+
+// エンジン別にmain関数を実行
+runMain( File($.fileName).fsName, main );

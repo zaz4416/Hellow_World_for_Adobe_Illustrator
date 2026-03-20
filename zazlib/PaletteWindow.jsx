@@ -1,5 +1,5 @@
 ﻿
-// Ver.1.0 : 2026/03/19
+// Ver.1.0 : 2026/03/20
 
 
 // --- グローバル関数 -----------------------------------------------------------------
@@ -20,6 +20,7 @@ function runMain(main)
     // エンジンがmainでないときは、ブリッジトーク経由で実行
     if ( $.engineName !== "main" )
     {
+        $.writeln( "ブリッジトーク経由で、main関数を実行" );
         var bt = new BridgeTalk();
         bt.target = BridgeTalk.appSpecifier;
 
@@ -32,6 +33,7 @@ function runMain(main)
         bt.send();
     } else {
         // エンジンがmainのときは、そのまま実行
+        $.writeln( "ダイレクトに、main関数を実行" );
         main();
     }
 }

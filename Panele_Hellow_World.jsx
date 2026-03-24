@@ -27,7 +27,7 @@
    ボタンが押された　→　onClick　→　CallFuncでBridgeTalkを使用してSayHelloWorldを呼ぶ　→　HelloWorldを呼ぶ
 */
 
-// Ver.1.0 : 2026/03/20
+// Ver.1.0 : 2026/03/23
 
 #target illustrator
 #targetengine "main"
@@ -36,7 +36,6 @@
 // スクリプトを読み込む。#includeではNG。$.evalFileを使用すること。
 $.evalFile(File($.fileName).parent + "/ZazLib/ClassInheritance.jsx");
 $.evalFile(File($.fileName).parent + "/ZazLib/Language.jsx");
-$.evalFile(File($.fileName).parent + "/ZazLib/GlobalArray.jsx");
 $.evalFile(File($.fileName).parent + "/ZazLib/PaletteWindow.jsx");
 
 

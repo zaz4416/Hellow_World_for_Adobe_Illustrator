@@ -35,8 +35,8 @@
 
 // スクリプトを読み込む。#includeではNG。$.evalFileを使用すること。
 $.evalFile(File($.fileName).parent + "/ZazLib/ClassInheritance.jsx");
-$.evalFile(File($.fileName).parent + "/ZazLib/Language.jsx");
-$.evalFile(File($.fileName).parent + "/ZazLib/PaletteWindow.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/CLanguage.jsx");
+$.evalFile(File($.fileName).parent + "/ZazLib/CPaletteWindow.jsx");
 
 
 // 言語ごとの辞書を定義
